@@ -22,9 +22,21 @@
             <center>
                 <h2>CONTEXT FREE GRAMMAR</h2>
             </center>
+            <br>
+
             <p>Kata-kata yang diterima mesin adalah sebagai berikut:</p>
-            <p>Kata benda: siwur | jukut | kai | cai | bumi</p>
-            <p>Kata kerja: maca | teuleug | mioh | bayur | tuang</p>
+            <p>Kata benda (NN): siwur | jukut | kai | cai | bumi</p>
+            <p>Kata kerja (VB): maca | teuleug | mioh | bayur | tuang</p>
+
+            <br>
+
+            <p>Grammar:</p>
+            <p> &lt;S&gt;::= &lt;NN&gt; &lt;VB&gt; &lt;NN&gt; <br>
+                &lt;NN&gt;::= siwur | jukut | kai | cai | bumi <br>
+                &lt;VB&gt;::= maca | teuleug | mioh | bayur | tuang</p>
+            
+            <br>
+
             <input id="kalimat" type="text", class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" placeholder="Masukkan kalimat Anda di sini">
             <center>
                 <button id="idButton" type="submit" class="btn btn-info" pys-onClick="lexicalAnalizer">submit</button>
@@ -47,7 +59,6 @@
             import string
 
             def lexicalAnalizer(*args, **kwargs):
-                console.log('test')
                 # Initialization
                 alphabetList = list(string.ascii_lowercase)
                 stateList = [
@@ -81,7 +92,7 @@
                 ## transition for new token
                 transitionTable[('q35', 's')] = 'q17'
                 
-                # jukut - hana
+                # jukut
                 transitionTable[('q0', 'j')] = 'q27'
                 transitionTable[('q27', 'u')] = 'q28'
                 transitionTable[('q28', 'k')] = 'q29'
@@ -95,7 +106,7 @@
                 ## transition for new token
                 transitionTable[('q35', 'j')] = 'q27'
                 
-                # kai - nadia
+                # kai
                 transitionTable[('q0','k')] = 'q32'
                 transitionTable[('q32','a')] = 'q33'
                 transitionTable[('q33','i')] = 'q34'
@@ -107,7 +118,7 @@
                 ## transition for new token
                 transitionTable[('q35', 'k')] = 'q32'
                 
-                # cai - aryya
+                # cai
                 transitionTable[('q0', 'c')] = 'q32'
                 
                 ## transition for new token
@@ -182,7 +193,8 @@
                 transitionTable[('q25', 'a')] = 'q19'
                 
                 # Lexical Analysis
-                def lexAn(sentence, inputString):
+                def lexAn(sentence):
+                    inputString = sentence.lower() + '#'
                     idxChar = 0
                     state = 'q0'
                     currentToken = ''
@@ -192,24 +204,103 @@
                         currentToken += currentChar
                         state = transitionTable[(state, currentChar)]
                         if state in acceptedState:
-                            <!-- print('current token:', currentToken, 'valid') -->
-                            log = 'current token:', currentToken, 'valid'
-                            pyscript.write("kalimatBaru", log)
                             currentToken = ''
                         elif state == 'error':
-                            <!-- print('error') -->
-                            pyscript.write("kalimatBaru", 'error')
-                            break;
+                            pyscript.write('kalimatBaru', 'Terdapat kata yang tidak valid!')
+                            return False;
                         idxChar += 1
                     if state == 'accept':
-                        <!-- print('semua token diinput:', sentence, 'valid') -->
-                        log = 'semua token diinput:', sentence, 'valid'
-                        pyscript.write("kalimatBaru", log)
+                        pyscript.write('kalimatBaru', 'Semua kata valid')
+                        return True
+
+                def parser(sentence):
+                    tokens = sentence.lower().split()
+                    tokens.append('EOS')
+                    
+                    # symbol definition
+                    nonTerminals = ['S', 'NN', 'VB']
+                    terminals = ['siwur', 'jukut', 'kai', 'cai', 'bumi', 'maca', 'teuleug', 'mioh', 'bayur', 'tuang']
+                    
+                    # parse table definition
+                    parseTable = {}
+                    
+                    parseTable[('S', 'siwur')] = ['NN', 'VB', 'NN']
+                    parseTable[('S', 'jukut')] = ['NN', 'VB', 'NN']
+                    parseTable[('S', 'kai')] = ['NN', 'VB', 'NN']
+                    parseTable[('S', 'cai')] = ['NN', 'VB', 'NN']
+                    parseTable[('S', 'bumi')] = ['NN', 'VB', 'NN']
+                    parseTable[('S', 'maca')] = ['error']
+                    parseTable[('S', 'teuleug')] = ['error']
+                    parseTable[('S', 'mioh')] = ['error']
+                    parseTable[('S', 'bayur')] = ['error']
+                    parseTable[('S', 'tuang')] = ['error']
+                    
+                    parseTable[('NN', 'siwur')] = ['siwur']
+                    parseTable[('NN', 'jukut')] = ['jukut']
+                    parseTable[('NN', 'kai')] = ['kai']
+                    parseTable[('NN', 'cai')] = ['cai']
+                    parseTable[('NN', 'bumi')] = ['bumi']
+                    parseTable[('NN', 'maca')] = ['error']
+                    parseTable[('NN', 'teuleug')] = ['error']
+                    parseTable[('NN', 'mioh')] = ['error']
+                    parseTable[('NN', 'bayur')] = ['error']
+                    parseTable[('NN', 'tuang')] = ['error']
+                    
+                    parseTable[('VB', 'siwur')] = ['error']
+                    parseTable[('VB', 'jukut')] = ['error']
+                    parseTable[('VB', 'kai')] = ['error']
+                    parseTable[('VB', 'cai')] = ['error']
+                    parseTable[('VB', 'bumi')] = ['error']
+                    parseTable[('VB', 'maca')] = ['maca']
+                    parseTable[('VB', 'teuleug')] = ['teuleug']
+                    parseTable[('VB', 'mioh')] = ['mioh']
+                    parseTable[('VB', 'bayur')] = ['bayur']
+                    parseTable[('VB', 'tuang')] = ['tuang']
+                    
+                    # stack initialization
+                    stack = []
+                    stack.append('#')
+                    stack.append('S')
+                    
+                    # input reading initialization
+                    idxToken = 0
+                    symbol = tokens[idxToken]
+                    
+                    # parsing process
+                    while (len(stack) > 0):
+                        top = stack[len(stack) - 1]
+                        if top in terminals:
+                            if top == symbol:
+                                stack.pop()
+                                idxToken += 1
+                                symbol = tokens[idxToken]
+                                if symbol == 'EOS':
+                                    stack.pop()
+                            else:
+                                break
+                        elif top in nonTerminals:
+                            if parseTable[(top, symbol)][0] != 'error':
+                                stack.pop()
+                                symbolsToBePushed = parseTable[(top, symbol)]
+                                for i in range(len(symbolsToBePushed) - 1, -1, -1):
+                                    stack.append(symbolsToBePushed[i])
+                            else:
+                                break
+                        else:
+                            break
+                        
+                    # conclusion
+                    if symbol == 'EOS' and len(stack) == 0:
+                        pyscript.write('kalimatBaru', 'Kalimat sesuai grammar')
+                    else:
+                        pyscript.write('kalimatBaru', 'Error! Kalimat tidak sesuai grammar')
                 
                 # input user
                 sentence = document.getElementById('kalimat').value
-                inputString = sentence.lower() + '#'
-                lexAn(sentence, inputString)
+                
+                if lexAn(sentence):
+                    parser(sentence)
+                
         </py-script>
     </body>
 </html>

@@ -137,7 +137,8 @@ transitionTable[('q2', 'n')] = 'q11'
 transitionTable[('q25', 'a')] = 'q19'
 
 # Lexical Analysis
-def lexAn(sentence, inputString):
+def lexAn(sentence):
+  inputString = sentence.lower() + '#'
   idxChar = 0
   state = 'q0'
   currentToken = ''
@@ -159,5 +160,4 @@ def lexAn(sentence, inputString):
 # input user
 print('Masukkan kalimat Anda:')
 sentence = input()
-inputString = sentence.lower() + '#'
 lexAn(sentence, inputString)
