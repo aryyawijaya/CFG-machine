@@ -1,5 +1,6 @@
 # add EOS on the last sentence
-sentence = 'siwur maca jukut'
+print('Masukkan kalimat Anda:')
+sentence = input()
 tokens = sentence.lower().split()
 tokens.append('EOS')
 
@@ -10,7 +11,6 @@ terminals = ['siwur', 'jukut', 'kai', 'cai', 'bumi', 'maca', 'teuleug', 'mioh', 
 # parse table definition
 parse_table = {}
 
-# aryya
 parse_table[('S', 'siwur')] = ['NN', 'VB', 'NN']
 parse_table[('S', 'jukut')] = ['NN', 'VB', 'NN']
 parse_table[('S', 'kai')] = ['NN', 'VB', 'NN']
@@ -22,7 +22,6 @@ parse_table[('S', 'mioh')] = ['error']
 parse_table[('S', 'bayur')] = ['error']
 parse_table[('S', 'tuang')] = ['error']
 
-# hana
 parse_table[('NN', 'siwur')] = ['siwur']
 parse_table[('NN', 'jukut')] = ['jukut']
 parse_table[('NN', 'kai')] = ['kai']
@@ -33,8 +32,6 @@ parse_table[('NN', 'teuleug')] = ['error']
 parse_table[('NN', 'mioh')] = ['error']
 parse_table[('NN', 'bayur')] = ['error']
 parse_table[('NN', 'tuang')] = ['error']
-
-# nadia
 
 parse_table[('VB', 'siwur')] = ['error']
 parse_table[('VB', 'jukut')] = ['error']
